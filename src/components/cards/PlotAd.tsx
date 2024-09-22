@@ -1,10 +1,12 @@
 import { Plot } from "@/types";
 import { MapPin } from "lucide-react";
 import Image from "next/image";
+import Link from "next/link";
 
 export default function PlotAd({ data }:{data:Plot}) {
+  console.log(data, '===== plots')
   return (
-    <div className="w-full rounded-md  border border-gray-200 hover:shadow-md">
+    <div className="w-full rounded-md  border border-gray-200 hover:shadow-md relative">
       <div className="relative w-full h-52">
         <Image src="/land.jpg" alt="car" fill />
       </div>
@@ -18,6 +20,7 @@ export default function PlotAd({ data }:{data:Plot}) {
           <span>{data.location}</span>
         </div>
       </div>
+      <Link href={`/plots/${data?.id}`}  className="absolute w-full h-full inset-0"/>
     </div>
   );
 }
