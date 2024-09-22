@@ -10,7 +10,6 @@ const inter = Inter({ subsets: ["latin"] });
 export default function Home({ popular }: { popular: PopularResponse }) {
   return (
     <main className={`container mx-auto ${inter.className}`}>
-      <Navbar />
       <Popular data={popular} />
     </main>
   );
