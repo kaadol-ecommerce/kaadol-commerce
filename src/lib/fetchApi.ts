@@ -1,5 +1,3 @@
-import { fetchHttp } from "azle/src/lib/fetch/http";
-
 export async function fetchAPI<T>(path: string, options = {}) {
     try {
         const mergedOptions = {
