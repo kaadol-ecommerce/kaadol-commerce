@@ -1,0 +1,22 @@
+export const NAVBAR_LINKS =[
+    {
+        id:1,
+        name:"Motors",
+        link:"/"
+    },
+     {
+        id:2,
+        name:"Plots",
+        link:"/"
+    },
+     {
+        id:3,
+        name:"Houses",
+        link:"/"
+    },
+     {
+        id:4,
+        name:"Jobs",
+        link:"/"
+    }
+]
