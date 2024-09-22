@@ -2,28 +2,28 @@ import { Inter } from "next/font/google";
 import Navbar from "@/components/layout/Navbar";
 import Popular from "@/components/sections/Popular";
 import type { GetServerSideProps } from "next";
+import { fetchAPI } from "@/lib/fetchApi";
+import { House, Motor, Plot } from "@/types";
 
 const inter = Inter({ subsets: ["latin"] });
 
-export default function Home({ repo }: any) {
+export default function Home({ popular }: { popular: PopularResponse }) {
   return (
     <main className={`container mx-auto ${inter.className}`}>
       <Navbar />
-      <Popular data={repo} />
+      <Popular data={popular} />
     </main>
   );
 }
 
-type Repo = {
-  name: string;
-  stargazers_count: number;
+
+export type PopularResponse = {
+  motors: Motor[];
+  houses: House[];
+  plots: Plot[];
 };
 
 export const getServerSideProps = (async () => {
-  // Fetch data from external API
-  console.log(process.env.NEXT_PUBLIC_BACKEND_URL);
-  const res = await fetch(`${process.env.NEXT_PUBLIC_BACKEND_URL}/api/popular`);
-  const repo = await res.json();
-  // Pass data to the page via props
-  return { props: { repo } };
-}) satisfies GetServerSideProps<{ repo: Repo }>;
+  const popular = await fetchAPI<PopularResponse>("/popular");
+  return { props: { popular } };
+}) satisfies GetServerSideProps<{ popular: PopularResponse }>;
