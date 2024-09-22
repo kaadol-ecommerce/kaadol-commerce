@@ -7,10 +7,12 @@ import {
   CardTitle,
 } from "@/components/ui/card";
 import Image from "next/image";
+import Link from "next/link";
 
 export default function MotorAd({data}:any) {
   console.log(data)
   return (
+    <Link href={`/motors/${data?.id}`}>
     <Card>
       <CardHeader>
         <div className="relative w-full h-52 rounded-lg overflow-hidden">
@@ -29,5 +31,6 @@ export default function MotorAd({data}:any) {
         </div>
       </CardContent>
     </Card>
+    </Link>
   );
 }
