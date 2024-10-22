@@ -64,7 +64,6 @@ export default function SinglePlot({ plot }: { plot: Plot }) {
 
 export const getServerSideProps = async (context: any) => {
   const { id } = context.params;
-  const plot = await fetchAPI<Plot>(`/plots/${id}`);
-  console.log(plot, "==== plot");
-  return { props: { plot } };
+  const data = await fetchAPI<{ plot: Plot}>(`/plots/${id}`);
+  return { props: data };
 };

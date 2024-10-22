@@ -47,9 +47,7 @@ export default function SinglePlot({ house }: { house: House }) {
 
           <div className="border-b-[rgb(238, 240, 241)] border-b-[1px] pb-5">
             <h3 className="text-xl font-medium mt-6 mb-2">Description</h3>
-            <p>
-              {house.description}
-            </p>
+            <p>{house.description}</p>
           </div>
         </div>
         <div>
@@ -62,7 +60,6 @@ export default function SinglePlot({ house }: { house: House }) {
 
 export const getServerSideProps = async (context: any) => {
   const { id } = context.params;
-  const house = await fetchAPI<House>(`/houses/${id}`);
-  console.log(house, "==== house");
-  return { props: { house } };
+  const data = await fetchAPI<{ house: House }>(`/houses/${id}`);
+  return { props: data };
 };

@@ -15,7 +15,6 @@ export default function Home({ popular }: { popular: PopularResponse }) {
   );
 }
 
-
 export type PopularResponse = {
   motors: Motor[];
   houses: House[];

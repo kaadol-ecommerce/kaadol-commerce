@@ -140,6 +140,6 @@ export default function SingleMotor({ motor }: { motor: Motor }) {
 
 export const getServerSideProps = async (context: any) => {
   const { id } = context.params;
-  const motor = await fetchAPI<Motor>(`/motors/${id}`);
-  return { props: { motor } };
+  const data = await fetchAPI<{motor: Motor}>(`/motors/${id}`);
+  return { props: data };
 };

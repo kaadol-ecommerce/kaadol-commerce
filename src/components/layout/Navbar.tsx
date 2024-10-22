@@ -2,15 +2,29 @@ import React from 'react'
 import { Button } from "@/components/ui/button";
 import Link from 'next/link';
 import { NAVBAR_LINKS } from '@/constants/navbarLinks';
+import AuthDialog from '../dialogs/AuthDialog';
+import Cookies from 'js-cookie';
+import { useRouter } from 'next/router';
 
+interface User {
+  id: string;
+  email: string;
+}
 
-export default function Navbar() {
+export default function Navbar({ user } : { user?: User }) {
+  const router = useRouter();
+  const handleLogout = () => {
+    Cookies.remove('token');
+    router.reload();
+  }
+
   return (
     <div className="w-full pt-4">
       <div className="flex justify-between items-center pb-4 container mx-auto">
         <h1 className="font-bold text-2xl text-blue-950">KADOOL LOGO</h1>
         <div className="flex gap-4 items-center">
-          <Button variant="secondary">Login or Sign up</Button>
+        {!user && <AuthDialog />}
+        {user && <Button variant='outline' onClick={handleLogout}>Logout</Button>}
           <Button>Place your Ad</Button>
         </div>
       </div>
