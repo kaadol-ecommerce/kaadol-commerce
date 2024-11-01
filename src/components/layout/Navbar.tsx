@@ -1,31 +1,47 @@
-import React from 'react'
+import React from "react";
 import { Button } from "@/components/ui/button";
-import Link from 'next/link';
-import { NAVBAR_LINKS } from '@/constants/navbarLinks';
-import AuthDialog from '../dialogs/AuthDialog';
-import Cookies from 'js-cookie';
-import { useRouter } from 'next/router';
+import Link from "next/link";
+import { NAVBAR_LINKS } from "@/constants/navbarLinks";
+import AuthDialog from "../dialogs/AuthDialog";
+import Cookies from "js-cookie";
+import { useRouter } from "next/router";
+import { useUser } from "@/context/UserContext";
 
 interface User {
   id: string;
   email: string;
 }
 
-export default function Navbar({ user } : { user?: User }) {
+export default function Navbar() {
   const router = useRouter();
+  const { user } = useUser();
   const handleLogout = () => {
-    Cookies.remove('token');
+    Cookies.remove("token");
     router.reload();
-  }
+  };
 
   return (
     <div className="w-full pt-4">
       <div className="flex justify-between items-center pb-4 container mx-auto">
         <h1 className="font-bold text-2xl text-blue-950">KADOOL LOGO</h1>
         <div className="flex gap-4 items-center">
-        {!user && <AuthDialog />}
-        {user && <Button variant='outline' onClick={handleLogout}>Logout</Button>}
-          <Button>Place your Ad</Button>
+          {!user && <AuthDialog />}
+
+          {user && (
+            <Button variant="secondary" onClick={handleLogout}>
+              Logout
+            </Button>
+          )}
+          {user && (
+            <Button variant={"outline"} asChild>
+              <Link href={"/dashboard"}>My Ads</Link>
+            </Button>
+          )}
+          {user ? (
+            <Button asChild><Link href={"/dashboard/create/pick-category"}>Place your ad</Link></Button>
+          ) : (
+            <AuthDialog redirectPath="/dashboard/create/pick-category" button={<Button>Place your Ad</Button>} />
+          )}
         </div>
       </div>
       <div className=" py-4 border-y border-gray-200">

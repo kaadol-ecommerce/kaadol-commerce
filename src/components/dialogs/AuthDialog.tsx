@@ -43,7 +43,7 @@ interface LoginResponse {
   access_token: string;
 }
 
-export default function authDialog() {
+export default function AuthDialog({ button, redirectPath }: { button?: React.ReactNode, redirectPath?: string }) {
   const [isSignup, setIsSignup] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const {
@@ -76,6 +76,10 @@ export default function authDialog() {
       }
     );
     Cookies.set("token", res.data.access_token, { expires: 7 });
+    if (redirectPath) {
+      router.push(redirectPath);
+      return;
+    }
     router.reload();
     } catch (error) {
       if (error instanceof AxiosError && error.response?.status === 401) {
@@ -86,7 +90,6 @@ export default function authDialog() {
   };
 
   const handleSignup = async (data: FieldValues) => {
-    console.log(data, "I got there in signup");
     try {
       const res = await axios.post<LoginResponse>(
         `${process.env.NEXT_PUBLIC_BACKEND_URL}/api/auth/register`,
@@ -98,6 +101,10 @@ export default function authDialog() {
         }
       );
       Cookies.set("token", res.data.access_token, { expires: 7 });
+      if (redirectPath) {
+        router.push(redirectPath);
+        return;
+      }
       router.reload();
       setError(null);
     } catch (error) {
@@ -108,12 +115,14 @@ export default function authDialog() {
     }
   };
 
-  console.log(signupErrors, "signupErrors", getValues(), "getValues");
-
   return (
     <Dialog>
       <DialogTrigger asChild>
-        <Button variant={"secondary"}>Login or Signup</Button>
+        {button ? (
+          button
+        ) : (
+          <Button variant={"secondary"}>Login or Signup</Button>
+        )}
       </DialogTrigger>
       <DialogContent className="sm:max-w-[425px]">
         <DialogHeader>
