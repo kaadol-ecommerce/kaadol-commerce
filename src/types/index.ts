@@ -39,3 +39,12 @@ export type Plot = {
     description: string;
     subCategory: number;
 };
+
+
+export type SubCategory = {
+    id: number;
+    name: string;
+    category: string;
+    description: string;
+    
+}

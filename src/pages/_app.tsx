@@ -2,30 +2,49 @@ import Footer from "@/components/layout/Footer";
 import Navbar from "@/components/layout/Navbar";
 import "@/styles/globals.css";
 import type { AppContext, AppProps } from "next/app";
-import Cookies from "cookie";
+import { parse } from "cookie";
 import axios, { AxiosError } from "axios";
+import { ReactElement, ReactNode } from "react";
+import { NextPage } from "next";
+import { User } from "lucide-react";
+import { UserProvider } from "@/context/UserContext";
 
 interface User {
   id: string;
   email: string;
 }
+
+export type NextPageWithLayout<P = unknown, IP = P> = NextPage<P, IP> & {
+  getLayout?: (page: ReactElement) => ReactNode;
+};
+
+type AppPropsWithLayout<T> = AppProps<T> & {
+  Component: NextPageWithLayout;
+};
+
 export default function App({
   Component,
   pageProps,
-}: AppProps<{ user?: User }>) {
+}: AppPropsWithLayout<{ user?: User }>) {
   const { user } = pageProps;
+  const getLayout = Component.getLayout ?? (page => page);
   return (
-    <>
-      <Navbar user={user} />
-      <Component {...pageProps} />
+    <UserProvider user={user}>
+    <div className="flex flex-col h-full min-h-screen">
+      <Navbar />
+      <div className="flex-1">
+        
+        {getLayout(<Component {...pageProps} />)}
+      </div>
       <Footer />
-    </>
+    </div>
+    </UserProvider>
   );
 }
 
 App.getInitialProps = async (appContext: AppContext) => {
-  const cookies = Cookies.parse(appContext.ctx.req?.headers.cookie || "");
-  const token = cookies.token;
+  const { token } = parse(appContext.ctx.req?.headers.cookie || "");
+
   if (!token) {
     return { pageProps: {} };
   }
@@ -38,7 +57,6 @@ App.getInitialProps = async (appContext: AppContext) => {
         },
       }
     );
-    console.log(res.data);
     return { pageProps: { user: res.data } };
   } catch (error) {
     if (error instanceof AxiosError && error.response?.status === 401) {
