@@ -1,8 +1,14 @@
 import { Button } from "@/components/ui/button";
 import { fetchAPI } from "@/lib/fetchApi";
-import { Motor } from "@/types";
+import { Motor, Purchase } from "@/types";
+import axios, { AxiosError } from "axios";
 import { GetServerSideProps } from "next";
 import Image from "next/image";
+import { parse } from "cookie";
+import Link from "next/link";
+import { useRouter } from "next/router";
+import { Loader2 } from "lucide-react";
+import { useEffect, useState } from "react";
 
 function SmallField({ label, value }: { label: string; value: string }) {
   return (
@@ -34,9 +40,52 @@ function AdditionalFields({
   );
 }
 
-export default function SingleMotor({ motor }: { motor: Motor }) {
+export default function SingleMotor({
+  motor,
+  purchase,
+}: {
+  motor: Motor;
+  purchase: Purchase;
+}) {
+
+  const router = useRouter();
+  const { status } = router.query as { status: string };
+  const [isVisible, setIsVisible] = useState(false)
+
+  useEffect(() => {
+    if (status === 'successful') {
+      setIsVisible(true)
+      const timer = setTimeout(() => {
+        setIsVisible(false)
+        const cleanPath = router.pathname.replace(/\[.*?\]/g, (match) => {
+          const paramName = match.slice(1, -1);
+          return router.query[paramName] as string;
+        });
+        async function reload() {
+          await router.replace(cleanPath, undefined, { scroll: false });
+          router.reload();
+        }
+        
+        reload()
+
+      }, 5000)
+
+      return () => clearTimeout(timer)
+    } else {
+      setIsVisible(false)
+    }
+  }, [status])
+  if (isVisible) {
+    return (
+      <div className="flex flex-col items-center justify-center p-4 space-y-4 bg-white rounded-lg shadow-md">
+        <Loader2 className="w-12 h-12 text-primary animate-spin" />
+        <p className="text-lg font-medium text-gray-700">Verifying your payment..</p>
+        <p className="text-sm text-gray-500">Please do not close this window</p>
+      </div>
+    )
+  }
   return (
-    <div className="mx-auto max-w-7xl px-4 mt-6">
+    <div className="mx-auto container mt-6">
       <div className="flex justify-between mb-8">
         <h2 className="text-3xl">{motor.title}</h2>
         <h3 className="text-primary text-3xl font-semibold">
@@ -132,15 +181,54 @@ export default function SingleMotor({ motor }: { motor: Motor }) {
           </div>
         </div>
         <div>
-          <Button>Show phone number</Button>
+          {purchase?.status === "completed" ? (
+            <Button>Show phone number</Button>
+          ) : (
+            <Button asChild>
+              <Link href={`/dashboard/plans?itemType=motor&itemId=${motor.id}`}>Pay Your ad</Link>
+            </Button>
+          )}
         </div>
       </div>
     </div>
   );
 }
 
-export const getServerSideProps: GetServerSideProps<{ motor: Motor }> = async (context) => {
-  const { id } = context.params as { id: string };
-  const data = await fetchAPI<{ motor: Motor }>(`/motors/${id}`);
-  return { props: data };
+export const getServerSideProps: GetServerSideProps = async (context) => {
+  try {
+    const { id } = context.params as { id: string };
+    const { token } = parse(context.req.headers.cookie || "");
+    const { data } = await axios.get<{ motor: Motor }>(
+      `${process.env.NEXT_PUBLIC_BACKEND_URL}/api/motors/${id}/owner`,
+      {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      }
+    );
+    const purchase = await axios.get<{ purchase: Purchase | null }>(
+      `${process.env.NEXT_PUBLIC_BACKEND_URL}/api/motors/${id}/purchase`,
+      {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      }
+    );
+    return {
+      props: {
+        motor: data.motor,
+        purchase: purchase.data.purchase,
+      },
+    };
+  } catch (error) {
+    if (error instanceof AxiosError && error.response?.status === 401) {
+      return {
+        redirect: {
+          destination: "/",
+          permanent: true,
+        },
+      };
+    }
+    throw error;
+  }
 };

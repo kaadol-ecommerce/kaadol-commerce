@@ -62,6 +62,8 @@ export default function Dashboard({
                 title={motor.title}
                 price={`${motor.price}rwf`}
                 expiresIn="29 days"
+                type="motors"
+                id={motor.id}
               />
             ))}
           </div>
@@ -76,6 +78,8 @@ export default function Dashboard({
                 title={house.title}
                 price={`${house.price}rwf`}
                 expiresIn="29 days"
+                type="houses"
+                id={house.id}
               />
             ))}
           </div>
@@ -90,6 +94,8 @@ export default function Dashboard({
                 title={plot.title}
                 price={`${plot.price}rwf`}
                 expiresIn="29 days"
+                type="plots"
+                id={plot.id}
               />
             ))}
           </div>

@@ -2,12 +2,15 @@ import React from "react";
 import Image from "next/image";
 import { MoreVertical } from "lucide-react";
 import { Button } from "../ui/button";
+import Link from "next/link";
 
 interface MyAdProps {
   status: string;
   title: string;
   price: string;
   expiresIn: string;
+  id: number;
+  type: 'houses' | 'motors' | 'plots';
 }
 
 const MyAd: React.FC<MyAdProps> = ({
@@ -15,9 +18,11 @@ const MyAd: React.FC<MyAdProps> = ({
   title,
   price,
   expiresIn,
+  id,
+  type,
 }) => {
   return (
-    <div className="mt-4 border rounded-lg p-4">
+    <Link href={`dashboard/${type}/${id}`} className="mt-4 border rounded-lg p-4 block">
       <div className="flex gap-4">
         <div className="relative w-24 h-24 bg-muted rounded-lg">
           <Image
@@ -45,7 +50,7 @@ const MyAd: React.FC<MyAdProps> = ({
           </div>
         </div>
       </div>
-    </div>
+    </Link>
   );
 };
 
