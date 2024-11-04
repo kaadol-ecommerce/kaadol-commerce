@@ -35,6 +35,7 @@ export default function Plans({ plans }: { plans: Plan[] }) {
         },
       }
     );
+    router.replace(paymentLink.data.link);
   }
   return (
     <div className="container mx-auto px-4 py-12">
