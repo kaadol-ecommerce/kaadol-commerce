@@ -4,7 +4,6 @@ import Image from "next/image";
 import Link from "next/link";
 
 export default function PlotAd({ data }:{data:Plot}) {
-  console.log(data, '===== plots')
   return (
     <div className="w-full rounded-md  border border-gray-200 hover:shadow-md relative">
       <div className="relative w-full h-52">

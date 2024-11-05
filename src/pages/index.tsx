@@ -1,5 +1,4 @@
 import { Inter } from "next/font/google";
-import Navbar from "@/components/layout/Navbar";
 import Popular from "@/components/sections/Popular";
 import type { GetServerSideProps } from "next";
 import { fetchAPI } from "@/lib/fetchApi";
@@ -14,7 +13,6 @@ export default function Home({ popular }: { popular: PopularResponse }) {
     </main>
   );
 }
-
 
 export type PopularResponse = {
   motors: Motor[];

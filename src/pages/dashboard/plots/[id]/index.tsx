@@ -1,12 +1,15 @@
 import { Button } from "@/components/ui/button";
-import { fetchAPI } from "@/lib/fetchApi";
-import { Plot } from "@/types";
+import { Plot, Purchase } from "@/types";
+import axios, { AxiosError } from "axios";
+import { parse } from "cookie";
+import { GetServerSideProps } from "next";
 import Image from "next/image";
+import Link from "next/link";
 import { CiLocationOn } from "react-icons/ci";
 
-export default function SinglePlot({ plot }: { plot: Plot }) {
+export default function SinglePlot({ plot, purchase }: { plot: Plot, purchase: Purchase }) {
   return (
-    <div>
+    <div className="mx-auto max-w-7xl px-4 mt-6">
       <div className="flex justify-between mb-5">
         <h2 className="text-3xl">{plot.title}</h2>
         <h3 className="text-primary text-3xl font-semibold">
@@ -55,15 +58,54 @@ export default function SinglePlot({ plot }: { plot: Plot }) {
           </div>
         </div>
         <div>
-          <Button>Show phone number</Button>
+          {purchase?.status === "completed" ? (
+            <Button>Show phone number</Button>
+          ) : (
+            <Button asChild>
+              <Link href={`/dashboard/plans?itemType=plot&itemId=${plot.id}`}>Pay Your ad</Link>
+            </Button>
+          )}
         </div>
       </div>
     </div>
   );
 }
 
-export const getServerSideProps = async (context: any) => {
-  const { id } = context.params;
-  const data = await fetchAPI<{ plot: Plot}>(`/plots/${id}`);
-  return { props: data };
-};
+export const getServerSideProps: GetServerSideProps = async (context) => {
+    try {
+      const { id } = context.params as { id: string };
+      const { token } = parse(context.req.headers.cookie || "");
+      const { data } = await axios.get<{ plot: Plot }>(
+        `${process.env.NEXT_PUBLIC_BACKEND_URL}/api/plots/${id}/owner`,
+        {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        }
+      );
+      const purchase = await axios.get<{ purchase: Purchase | null }>(
+        `${process.env.NEXT_PUBLIC_BACKEND_URL}/api/plots/${id}/purchase`,
+        {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        }
+      );
+      return {
+        props: {
+          plot: data.plot,
+          purchase: purchase.data.purchase,
+        },
+      };
+    } catch (error) {
+      if (error instanceof AxiosError && error.response?.status === 401) {
+        return {
+          redirect: {
+            destination: "/",
+            permanent: true,
+          },
+        };
+      }
+      throw error;
+    }
+  };

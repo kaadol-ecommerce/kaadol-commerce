@@ -39,3 +39,30 @@ export type Plot = {
     description: string;
     subCategory: number;
 };
+
+
+export type SubCategory = {
+    id: number;
+    name: string;
+    category: string;
+    description: string;
+}
+
+export type Purchase = {
+    id: number;
+    owner: number;
+    plan: number;
+    reference: string;
+    motor: number | null;
+    house: number | null;
+    plot: number | null;
+    status: string;
+}
+
+export type Plan = {
+    id: number;
+    name: string;
+    description: string;
+    price: number;
+    duration: number;
+}
