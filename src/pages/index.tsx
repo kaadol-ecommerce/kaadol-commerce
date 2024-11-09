@@ -21,6 +21,11 @@ export type PopularResponse = {
 };
 
 export const getServerSideProps = (async () => {
-  const popular = await fetchAPI<PopularResponse>("/popular");
-  return { props: { popular } };
-}) satisfies GetServerSideProps<{ popular: PopularResponse }>;
+  try {
+    const popular = await fetchAPI<PopularResponse>("/popular");
+    return { props: { popular } };
+  } catch (error) {
+    console.log(error);
+    return { props: { popular: [] } };
+  }
+}) satisfies GetServerSideProps<{ popular: PopularResponse | [] }>;

@@ -30,14 +30,13 @@ export default function App({
   const getLayout = Component.getLayout ?? (page => page);
   return (
     <UserProvider user={user}>
-    <div className="flex flex-col h-full min-h-screen">
-      <Navbar />
-      <div className="flex-1">
-        
-        {getLayout(<Component {...pageProps} />)}
+      <div className="flex justify-between flex-col w-full min-h-screen">
+        <Navbar />
+        <div className="flex-1 mx-auto max-w-7xl px-4 mt-6">
+          <Component {...pageProps} />
+        </div>
+        <Footer />
       </div>
-      <Footer />
-    </div>
     </UserProvider>
   );
 }

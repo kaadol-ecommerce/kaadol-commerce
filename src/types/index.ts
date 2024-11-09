@@ -14,6 +14,9 @@ export type Motor = {
     price: number;
     features: string[];
     owner: number;
+    brand: string;
+    brandDescription: string;
+    transmissionType: string;
 };
 
 export type House = {

@@ -36,7 +36,7 @@ function AdditionalFields({
 
 export default function SingleMotor({ motor }: { motor: Motor }) {
   return (
-    <div className="mx-auto max-w-7xl px-4 mt-6">
+    <div >
       <div className="flex justify-between mb-8">
         <h2 className="text-3xl">{motor.title}</h2>
         <h3 className="text-primary text-3xl font-semibold">

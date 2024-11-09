@@ -2,7 +2,7 @@ export const NAVBAR_LINKS =[
     {
         id:1,
         name:"Motors",
-        link:"/"
+        link:"/motors"
     },
      {
         id:2,

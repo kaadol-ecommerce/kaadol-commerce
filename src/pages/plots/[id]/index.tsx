@@ -6,7 +6,7 @@ import { CiLocationOn } from "react-icons/ci";
 
 export default function SinglePlot({ plot }: { plot: Plot }) {
   return (
-    <div className="mx-auto max-w-7xl px-4 mt-6">
+    <div>
       <div className="flex justify-between mb-5">
         <h2 className="text-3xl">{plot.title}</h2>
         <h3 className="text-primary text-3xl font-semibold">
