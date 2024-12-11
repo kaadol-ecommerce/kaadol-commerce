@@ -7,6 +7,7 @@ import AuthDialog from "../dialogs/AuthDialog";
 import Cookies from "js-cookie";
 import { useRouter } from "next/router";
 import { useUser } from "@/context/UserContext";
+import { Add } from "@carbon/icons-react";
 
 interface User {
   id: string;
@@ -37,14 +38,18 @@ export default function Navbar() {
             </Button>
           )}
           {user && (
-            <Button variant={"outline"} asChild>
-              <Link href={"/dashboard"}>My Ads</Link>
+            <Button variant={"tertiary"} onClick={() => {
+              router.push("/dashboard");
+            }}>
+              My Ads
             </Button>
           )}
           {user ? (
-            <Button asChild><Link href={"/dashboard/create/pick-category"}>Place your ad</Link></Button>
+            <Button variant={"primary"} Icon={Add} size="md" onClick={() => {
+              router.push("/dashboard/create/pick-category");
+            }}>Place your ad</Button>
           ) : (
-            <AuthDialog redirectPath="/dashboard/create/pick-category" button={<Button>Place your Ad</Button>} />
+            <AuthDialog redirectPath="/dashboard/create/pick-category" button={<Button variant={"primary"} Icon={Add} size="md">Place your Ad</Button>} />
           )}
         </div>
       </div>

@@ -25,16 +25,34 @@ const config = {
         background: "hsl(var(--background))",
         foreground: "hsl(var(--foreground))",
         primary: {
-          DEFAULT: "#172554",
+          DEFAULT: "hsl(var(--primary))",
           foreground: "hsl(var(--primary-foreground))",
+          button: "hsl(var(--button-primary))",
+          "button-hover": "hsl(var(--button-primary-hover))",
+          "button-active": "hsl(var(--button-primary-active))",
         },
         secondary: {
           DEFAULT: "hsl(var(--secondary))",
           foreground: "hsl(var(--secondary-foreground))",
+          "button": "hsl(var(--button-secondary))",
+          "button-hover": "hsl(var(--button-secondary-hover))",
+          "button-active": "hsl(var(--button-secondary-active))",
         },
-        destructive: {
+        tertiary: {
+          DEFAULT: "hsl(var(--tertiary))",
+          foreground: "hsl(var(--tertiary-foreground))",
+          button: "hsl(var(--button-tertiary))",
+          "button-hover": "hsl(var(--button-tertiary-hover))",
+          "button-active": "hsl(var(--button-tertiary-active))",
+        },
+        danger: {
           DEFAULT: "hsl(var(--destructive))",
           foreground: "hsl(var(--destructive-foreground))",
+          button: "hsl(var(--button-danger-primary))",
+
+          "button-hover": "hsl(var(--button-danger-hover))",
+          "button-active": "hsl(var(--button-danger-active))",
+          "button-secondary": "hsl(var(--button-danger-secondary))",
         },
         muted: {
           DEFAULT: "hsl(var(--muted))",

@@ -121,7 +121,7 @@ export default function AuthDialog({ button, redirectPath }: { button?: React.Re
         {button ? (
           button
         ) : (
-          <Button variant={"secondary"}>Login or Signup</Button>
+          <Button variant={"tertiary"}>Login or Signup</Button>
         )}
       </DialogTrigger>
       <DialogContent className="sm:max-w-[425px]">
