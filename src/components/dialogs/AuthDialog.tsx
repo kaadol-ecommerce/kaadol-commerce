@@ -11,13 +11,13 @@ import {
 import { loginSchema, signUpSchema } from "@/lib/zod";
 import { FieldValues, useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
-import Kinput from "../custom/KInput";
 import { Loader2 } from "lucide-react";
 import axios, { AxiosError } from "axios";
 import Cookies from "js-cookie";
 import { useRouter } from "next/router";
 import { useState } from "react";
 import { KErrorAlert } from "../custom/KErrorAlert";
+import { Input } from "../ui/input";
 
 type FormData = {
   email: string;
@@ -43,7 +43,13 @@ interface LoginResponse {
   access_token: string;
 }
 
-export default function AuthDialog({ button, redirectPath }: { button?: React.ReactNode, redirectPath?: string }) {
+export default function AuthDialog({
+  button,
+  redirectPath,
+}: {
+  button?: React.ReactNode;
+  redirectPath?: string;
+}) {
   const [isSignup, setIsSignup] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const {
@@ -69,24 +75,23 @@ export default function AuthDialog({ button, redirectPath }: { button?: React.Re
   const handleLogin = async (data: FieldValues) => {
     try {
       const res = await axios.post<LoginResponse>(
-      `${process.env.NEXT_PUBLIC_BACKEND_URL}/api/auth/login`,
-      {
-        username: data.email,
-        password: data.password,
+        `${process.env.NEXT_PUBLIC_BACKEND_URL}/api/auth/login`,
+        {
+          username: data.email,
+          password: data.password,
+        }
+      );
+      Cookies.set("token", res.data.access_token, { expires: 7 });
+      if (redirectPath) {
+        router.push(redirectPath);
+        return;
       }
-    );
-    Cookies.set("token", res.data.access_token, { expires: 7 });
-    if (redirectPath) {
-      router.push(redirectPath);
-      return;
-    }
-    router.reload();
+      router.reload();
     } catch (error) {
       if (error instanceof AxiosError && error.response?.status === 401) {
         return setError("Invalid Email or password");
       }
     }
-    
   };
 
   const handleSignup = async (data: FieldValues) => {
@@ -141,43 +146,43 @@ export default function AuthDialog({ button, redirectPath }: { button?: React.Re
             onSubmit={handleSignupSubmit(handleSignup)}
           >
             <div className="space-y-2">
-              <Kinput
+              <Input
                 id="firstName"
                 label="First name"
                 type="text"
-                control={signupControl}
+                // control={signupControl}
                 {...signupRegister("firstName")}
-                error={signupErrors.firstName?.message}
+                // error={signupErrors.firstName?.message}
               />
             </div>
             <div className="space-y-2">
-              <Kinput
+              <Input
                 id="lastName"
                 label="Last name"
                 type="text"
-                control={signupControl}
+                // control={signupControl}
                 {...signupRegister("lastName")}
-                error={signupErrors.lastName?.message}
+                // error={signupErrors.lastName?.message}
               />
             </div>
             <div className="space-y-2">
-              <Kinput
+              <Input
                 id="email"
                 label="Email"
                 type="email"
-                control={signupControl}
+                // control={signupControl}
                 {...signupRegister("email")}
-                error={signupErrors.email?.message}
+                // error={signupErrors.email?.message}
               />
             </div>
             <div className="space-y-2">
-              <Kinput
+              <Input
                 id="password"
                 label="Password"
                 type="password"
-                control={signupControl}
+                // control={signupControl}
                 {...signupRegister("password")}
-                error={signupErrors.password?.message}
+                // error={signupErrors.password?.message}
               />
             </div>
             <Button type="submit" className="w-full">
@@ -208,23 +213,22 @@ export default function AuthDialog({ button, redirectPath }: { button?: React.Re
             className="space-y-4 pt-4"
           >
             <div className="space-y-2">
-              <Kinput
+              <Input
                 id="email"
                 label="Email"
                 type="email"
-                control={control}
+                variant="fluid"
+                placeholder="Enter your email"
                 {...register("email")}
-                error={errors.email?.message}
               />
             </div>
             <div className="space-y-2">
-              <Kinput
+              <Input
                 id="password"
                 label="Password"
                 type="password"
-                control={control}
+                placeholder="Password"
                 {...register("password")}
-                error={errors.password?.message}
               />
             </div>
             <Button type="submit" className="w-full">
